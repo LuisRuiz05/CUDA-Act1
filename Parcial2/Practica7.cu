@@ -62,6 +62,14 @@ int main()
     // conv << <1, block >> > (devA, devB, n);
     cudaMemcpy(b, devB, n * n * sizeof(int), cudaMemcpyDeviceToHost);
 
+    dim3 block2(32, 32);
+    dim3 grid2((64 + (n * n) - 1) / (n * n), (64 + (n * n) - 1) / (n * n));
+    conv << <grid2, block2 >> > (devA, devB, n);
+    cudaMemcpy(b, devB, n * n * sizeof(int), cudaMemcpyDeviceToHost);
+    cudaDeviceSynchronize();
+    cudaDeviceReset();
+
+
     // Print solution
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
